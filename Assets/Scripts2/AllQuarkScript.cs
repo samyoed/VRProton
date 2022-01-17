@@ -48,4 +48,20 @@ public class AllQuarkScript : MonoBehaviour
         }
         
     }
+
+    public void TogglePolX(){
+        c1.polarizationAxis = 0;
+        c2.polarizationAxis = 0;
+        c3.polarizationAxis = 0;
+    }
+    public void TogglePolY(){
+        c1.polarizationAxis = 1;
+        c2.polarizationAxis = 1;
+        c3.polarizationAxis = 1;
+    }
+    public void TogglePolZ(){
+        c1.polarizationAxis = 2;
+        c2.polarizationAxis = 2;
+        c3.polarizationAxis = 2;
+    }
 }

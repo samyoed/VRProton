@@ -66,6 +66,10 @@ public class ChangeOrbit : MonoBehaviour
     /// </summary>
     public bool IsSmallOrbits { get { return isSmallOrbits; } }
 
+    public float rad;
+    public Vector3 tempRotVector;
+    public int polarizationAxis = 2;
+
     /// <summary>
     /// Enable or disable small orbits mode for this quark.
     /// </summary>
@@ -138,15 +142,28 @@ public class ChangeOrbit : MonoBehaviour
     }
     float counter = 0.0f;
     float axisChangeTime = .5f;
-    Vector3 tempRotVector = Vector3.zero;
+    // Vector3 tempRotVector = Vector3.zero;
     private void Update()
     {
+        rad = EstimatedSpeed;
         Vector3 pos = transform.position;
         
         
         if(isPolarized){
-            tempRotVector = Vector3.forward;
-            
+            if(polarizationAxis == 0){
+                tempRotVector = new Vector3(1.0f, 0.0f, 0.0f);
+                transform.position = new Vector3(0.0f, transform.position.y, transform.position.z);
+            }
+            else if(polarizationAxis == 1){
+                tempRotVector = new Vector3(0.0f, 1.0f, 0.0f);
+                transform.position = new Vector3(transform.position.x, 0.0f, transform.position.z);
+
+            }
+            else if(polarizationAxis == 2){
+                tempRotVector = new Vector3(0.0f, 0.0f, 1.0f);
+                transform.position = new Vector3(transform.position.x , transform.position.y, 0.0f);
+
+            }
         }
         else if(!isPolarized && counter < axisChangeTime)
             counter += Time.deltaTime;
@@ -162,8 +179,8 @@ public class ChangeOrbit : MonoBehaviour
         // First rotate current position along rotationVector with specified orbital speed
         // float speed = orbitalVelocity * QuarkSettings.Instance.GlobalSpeedMultiplier;
         float speed = orbitalVelocity;
-        // Vector3 rotated = Quaternion.AngleAxis(speed / pos.magnitude * Time.deltaTime, rotationVector) * pos;
-        Vector3 rotated = Quaternion.AngleAxis(speed * Time.deltaTime, rotationVector) * pos;
+        Vector3 rotated = Quaternion.AngleAxis(speed / pos.magnitude * Time.deltaTime, rotationVector) * pos;
+        // Vector3 rotated = Quaternion.AngleAxis(speed * Time.deltaTime, rotationVector) * pos;
 
 
         // Then calculate new position based on direction from old rotation position and orbit radius
@@ -175,8 +192,18 @@ public class ChangeOrbit : MonoBehaviour
         CurrentOrbitRadius = newPosition.magnitude;
         transform.position = newPosition;
 
-        // if(isPolarized){
-        //     transform.position = new Vector3(transform.position.x, transform.position.y, 0);
-        // }
+        if(isPolarized){
+            if(polarizationAxis == 0){
+                transform.position = new Vector3(0.0f, transform.position.y, transform.position.z);
+            }
+            else if(polarizationAxis == 1){
+                transform.position = new Vector3(transform.position.x, 0.0f, transform.position.z);
+
+            }
+            else if(polarizationAxis == 2){
+                transform.position = new Vector3(transform.position.x , transform.position.y, 0.0f);
+
+            }
+        }
     }
 }
